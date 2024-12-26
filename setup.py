@@ -9,7 +9,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "generate-react-types = django_react_types.core:generate_react_types",
+            "generate-react-types = django_react_types.core:main",
         ],
     },
     author="Diogo Antonio",
