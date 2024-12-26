@@ -84,7 +84,7 @@ def generate_react_types(
 
                 react_type = (
                     f"{'\n'.join(imports)}\n\n"
-                    f"export type {model_name} ={{\n" + "\n".join(react_fields) + "\n}}"
+                    f"export type {model_name} ={{\n" + "\n".join(react_fields) + "\n}"
                 )
                 react_types.append(react_type)
 
