@@ -54,8 +54,8 @@ You can use like this too:
 generate-react-types --django_project backend.settings --react_types_folder frontend/src/types
 ```
 
-backend.settings = my project django settings file
-frontend/src/types = where the objects types tsx will be saved 
+- backend.settings = my project django settings file
+- frontend/src/types = where the objects types tsx will be saved 
 
 ## Options
 #### --react_types_folder: The folder where the .tsx files will be generated.
