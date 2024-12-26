@@ -65,7 +65,7 @@ def generate_react_types(
             if f"{app_name}.{model_name}" in default_apps:
                 continue
 
-            fields = model._meta.fields
+            fields = model._meta.fields + model._meta.many_to_many
             react_fields = []
             imports = set()
 
