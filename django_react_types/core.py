@@ -54,7 +54,8 @@ def generate_react_types(
     for app in apps_to_search:
         for model in app.get_models():
 
-            if model not in default_apps:
+            print("model.__str__", model.__str__)
+            if model.__str__ not in default_apps:
                 model_name = model.__name__
                 fields = model._meta.fields
                 react_fields = []
