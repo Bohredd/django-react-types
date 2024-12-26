@@ -31,7 +31,11 @@ def generate_react_types(
     else:
         apps_to_search = apps.get_app_configs()
 
-    react_types = []
+    if not os.path.exists(react_types_folder):
+        os.makedirs(react_types_folder)
+
+    model_definitions = {}
+    model_imports = {}
 
     default_apps = [
         "admin.LogEntry",
@@ -58,47 +62,46 @@ def generate_react_types(
             app_name = model._meta.app_label
             model_name = model.__name__
 
-            if f"{app_name}.{model_name}" not in default_apps:
-                fields = model._meta.fields
-                react_fields = []
-                imports = set()
+            if f"{app_name}.{model_name}" in default_apps:
+                continue
 
-                for field in fields:
-                    if isinstance(field, models.ForeignKey):
-                        related_model_name = field.related_model.__name__
-                        react_field_type = related_model_name
-                        imports.add(
-                            f"import {{ {related_model_name} }} from './{related_model_name}';"
-                        )
-                    elif isinstance(field, models.ManyToManyField):
-                        related_model_name = field.related_model.__name__
-                        react_field_type = f"{related_model_name}[]"
-                        imports.add(
-                            f"import {{ {related_model_name} }} from './{related_model_name}';"
-                        )
-                    else:
-                        react_field_type = FIELD_TYPE_MAPPING.get(type(field), "any")
+            fields = model._meta.fields
+            react_fields = []
+            imports = set()
 
-                    react_fields.append(f"{field.name}: {react_field_type};")
+            for field in fields:
+                if isinstance(field, models.ForeignKey):
+                    related_model_name = field.related_model.__name__
+                    react_field_type = related_model_name
+                    imports.add(
+                        f"import {{ {related_model_name} }} from './{related_model_name}';"
+                    )
+                elif isinstance(field, models.ManyToManyField):
+                    related_model_name = field.related_model.__name__
+                    react_field_type = f"{related_model_name}[]"
+                    imports.add(
+                        f"import {{ {related_model_name} }} from './{related_model_name}';"
+                    )
+                else:
+                    react_field_type = FIELD_TYPE_MAPPING.get(type(field), "any")
 
-                react_type = (
-                    f"{'\n'.join(imports)}\n\n"
-                    f"export type {model_name} = {{\n"
-                    + "\n".join(react_fields)
-                    + "\n}};"
-                )
-                react_types.append(react_type)
+                react_fields.append(f"{field.name}: {react_field_type};")
 
-    if not os.path.exists(react_types_folder):
-        os.makedirs(react_types_folder)
+            imports_code = "\n".join(sorted(imports))
+            fields_code = "\n".join(react_fields)
+            type_definition = (
+                f"{imports_code}\n\n"
+                f"export type {model_name} = {{\n{fields_code}\n}};"
+            )
 
-    for react_type in react_types:
-        model_name = react_type.split()[2]
+            model_definitions[model_name] = type_definition
+            model_imports[model_name] = imports_code
+
+    for model_name, type_definition in model_definitions.items():
         output_file = os.path.join(react_types_folder, f"{model_name}.tsx")
-
         with open(output_file, "w") as f:
-            f.write(react_type)
-        print(f"React types have been saved to {output_file}")
+            f.write(type_definition)
+        print(f"React type for {model_name} saved to {output_file}")
 
 
 def main():
