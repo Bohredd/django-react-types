@@ -31,8 +31,23 @@ def generate_react_types(
 
     react_types = []
 
+    default_apps = [
+        'auth.Group',
+        'auth.Permission',
+        'auth.User',
+        'contenttypes.ContentType',
+        'sessions.Session',
+        'admin.LogEntry',
+        'admin.LogEntryAction',
+        'admin.LogEntryChange',
+        'rest_framework.authtoken.Token',
+        'rest_framework.authtoken.TokenProxy',
+        'celery.Celery',
+    ]
+
     for app in apps_to_search:
         for model in app.get_models():
+            print("Model: ", model)
             model_name = model.__name__
             fields = model._meta.fields
             react_fields = []
