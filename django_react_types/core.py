@@ -32,36 +32,43 @@ def generate_react_types(
     react_types = []
 
     default_apps = [
-        'auth.Group',
-        'auth.Permission',
-        'auth.User',
-        'contenttypes.ContentType',
-        'sessions.Session',
-        'admin.LogEntry',
-        'admin.LogEntryAction',
-        'admin.LogEntryChange',
-        'rest_framework.authtoken.Token',
-        'rest_framework.authtoken.TokenProxy',
-        'celery.Celery',
+        'django.contrib.admin.models.LogEntry',
+        'django.contrib.auth.models.Permission',
+        'django.contrib.auth.models.Group',
+        'django.contrib.auth.models.User',
+        'django.contrib.contenttypes.models.ContentType',
+        'django.contrib.sessions.models.Session',
+        'rest_framework.authtoken.models.Token',
+        'rest_framework.authtoken.models.TokenProxy',
+        'django_celery_beat.models.SolarSchedule',
+        'django_celery_beat.models.IntervalSchedule',
+        'django_celery_beat.models.ClockedSchedule',
+        'django_celery_beat.models.CrontabSchedule',
+        'django_celery_beat.models.PeriodicTasks',
+        'django_celery_beat.models.PeriodicTask',
+        'django_celery_results.models.TaskResult',
+        'django_celery_results.models.ChordCounter',
+        'django_celery_results.models.GroupResult',
     ]
 
     for app in apps_to_search:
         for model in app.get_models():
-            print("Model: ", model)
-            model_name = model.__name__
-            fields = model._meta.fields
-            react_fields = []
 
-            for field in fields:
-                react_field_type = FIELD_TYPE_MAPPING.get(
-                    type(field), "any"
-                )  # Default to "any" for unmapped types
-                react_fields.append(f"{field.name}: {react_field_type};")
+            if model not in default_apps:
+                model_name = model.__name__
+                fields = model._meta.fields
+                react_fields = []
 
-            react_type = (
-                f"export type {model_name} ={{\n" + "\n".join(react_fields) + "\n}"
-            )
-            react_types.append(react_type)
+                for field in fields:
+                    react_field_type = FIELD_TYPE_MAPPING.get(
+                        type(field), "any"
+                    )  # Default to "any" for unmapped types
+                    react_fields.append(f"{field.name}: {react_field_type};")
+
+                react_type = (
+                    f"export type {model_name} ={{\n" + "\n".join(react_fields) + "\n}"
+                )
+                react_types.append(react_type)
 
     if not os.path.exists(react_types_folder):
         os.makedirs(react_types_folder)
