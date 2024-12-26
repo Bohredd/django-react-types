@@ -22,10 +22,9 @@ pip install git+https://github.com/Bohredd/django-react-types.git
 ```bash
 git clone https://github.com/Bohredd/django-react-types.git
 cd django-react-types
-pip install .
 ```
 
-##Usage
+## Usage
 To generate TypeScript types for your Django models, you can use the provided function generate_react_types. The following parameters are required:
 
 django_project: The name of your Django project.
