@@ -57,6 +57,8 @@ def generate_react_types(
             app_name = model._meta.app_label
             model_name = model.__name__
 
+            print("Generating React types for:", f"{app_name}.{model_name}")
+
             if f"{app_name}.{model_name}" not in default_apps:
                 model_name = model.__name__
                 fields = model._meta.fields
