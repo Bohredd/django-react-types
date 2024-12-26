@@ -87,15 +87,16 @@ def generate_react_types(
 
                 react_fields.append(f"{field.name}: {react_field_type};")
 
-            print("Imports for", model_name, imports)
-            print("Fields for", model_name, react_fields)
-
             imports_code = "\n".join(sorted(imports))
             fields_code = "\n".join(react_fields)
-            type_definition = (
-                f"{imports_code}\n\n"
-                f"export type {model_name} = {{\n{fields_code}\n}};"
-            )
+
+            if not imports_code:
+                type_definition = f"export type {model_name} = {{\n{fields_code}\n}};"
+            else:
+                type_definition = (
+                    f"{imports_code}\n\n"
+                    f"export type {model_name} = {{\n{fields_code}\n}};"
+                )
 
             model_definitions[model_name] = type_definition
             model_imports[model_name] = imports_code
