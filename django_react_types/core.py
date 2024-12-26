@@ -62,7 +62,7 @@ def generate_react_types(
                 for field in fields:
                     react_field_type = FIELD_TYPE_MAPPING.get(
                         type(field), "any"
-                    )  # Default to "any" for unmapped types
+                    ) 
                     react_fields.append(f"{field.name}: {react_field_type};")
 
                 react_type = (
