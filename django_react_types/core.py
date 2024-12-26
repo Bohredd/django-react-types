@@ -55,7 +55,6 @@ def generate_react_types(
 
     for app in apps_to_search:
         for model in app.get_models():
-
             app_name = model._meta.app_label
             model_name = model.__name__
 
@@ -65,8 +64,6 @@ def generate_react_types(
                 imports = set()
 
                 for field in fields:
-                    print("Field:", field)
-                    print("Related model:", field.related_model)
                     if isinstance(field, models.ForeignKey):
                         related_model_name = field.related_model.__name__
                         react_field_type = related_model_name
@@ -86,7 +83,9 @@ def generate_react_types(
 
                 react_type = (
                     f"{'\n'.join(imports)}\n\n"
-                    f"export type {model_name} ={{\n" + "\n".join(react_fields) + "\n}"
+                    f"export type {model_name} = {{\n"
+                    + "\n".join(react_fields)
+                    + "\n}};"
                 )
                 react_types.append(react_type)
 
