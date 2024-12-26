@@ -1,0 +1,2 @@
+1. Arrumar nomenclatura dos files + imports 
+2. Arrumar caso de Foreign Key + ManyToManyField do Jogo (jogadores[])
