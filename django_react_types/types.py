@@ -9,9 +9,9 @@ FIELD_TYPE_MAPPING = {
     models.TextField: "string",
     models.FloatField: "number",
     models.DecimalField: "number",
-    models.ForeignKey: "string",  # You may want to handle relationships differently
-    models.ManyToManyField: "string[]",  # Similar handling for many-to-many relationships
-    models.AutoField: "number", # id 
+    models.ForeignKey: "string", 
+    models.ManyToManyField: "string[]", 
+    models.AutoField: "number", 
     models.PositiveIntegerField: "number",
     models.PositiveSmallIntegerField: "number",
     models.EmailField: "string",
