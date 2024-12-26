@@ -8,10 +8,12 @@ from django.core.exceptions import ImproperlyConfigured
 def generate_react_types(
     django_project: str, react_types_folder: str, django_app: str = None
 ):
+    os.environ["DJANGO_SETTINGS_MODULE"] = django_project
+
     settings_module = os.getenv("DJANGO_SETTINGS_MODULE")
     if not settings_module:
         raise ImproperlyConfigured("The Django settings module is not set.")
-
+    
     try:
         __import__(settings_module)
         django.setup()
