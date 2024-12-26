@@ -65,6 +65,8 @@ def generate_react_types(
                 imports = set()
 
                 for field in fields:
+                    print("Field:", field)
+                    print("Related model:", field.related_model.__name__)
                     if isinstance(field, models.ForeignKey):
                         related_model_name = field.related_model.__name__
                         react_field_type = related_model_name
