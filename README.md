@@ -49,7 +49,7 @@ generate_react_types(
 )
 ```
 
-You can use like this too:
+### Example Command Line Usage
 ```python
 generate-react-types --django_project backend.settings --react_types_folder frontend/src/types
 ```
@@ -62,18 +62,7 @@ generate-react-types --django_project backend.settings --react_types_folder fron
 #### --django_app: The specific Django app to generate types for. If omitted, types will be generated for all apps.
 ####  --django_project: The path to your Django project.
 
-
-### Example Command Line Usage
-
-```bash
-python manage.py generate_react_types --django_project your_django_project --react_types_folder path/to/output/folder --django_app your_app
-```
-
-## This project comes with unit tests to ensure everything works as expected. You can run the tests using the following command:
-
-```bash
-python manage.py test
-```
+## This project comes with unit tests to ensure everything works as expected.
 
 ## Contributing
 We welcome contributions to improve the project. If you'd like to contribute, please follow these steps:
@@ -87,7 +76,10 @@ We welcome contributions to improve the project. If you'd like to contribute, pl
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 Acknowledgements
+```bash
 Django: A powerful Python web framework used as the backend of this project.
 TypeScript: A superset of JavaScript that enables optional static typing.
-Contact
+```
+
+## Contact
 For any questions or issues, feel free to open an issue on the repository or contact the project maintainers.
