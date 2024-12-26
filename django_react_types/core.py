@@ -69,6 +69,11 @@ def generate_react_types(
             react_fields = []
             imports = set()
 
+            print("Meta fields:", model._meta.fields)
+            print("Meta many_to_many:", model._meta.many_to_many)
+
+            print("Full fields:", fields)
+
             print("Model:", model_name)
             for field in fields:
                 print("Field:", field)
