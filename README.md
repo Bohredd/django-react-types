@@ -50,10 +50,12 @@ generate_react_types(
 ```
 
 ## Options
---react_types_folder: The folder where the .tsx files will be generated.
---django_app: The specific Django app to generate types for. If omitted, types will be generated for all apps.
---django_project: The path to your Django project.
-Example Command Line Usage
+#### --react_types_folder: The folder where the .tsx files will be generated.
+#### --django_app: The specific Django app to generate types for. If omitted, types will be generated for all apps.
+####  --django_project: The path to your Django project.
+
+
+### Example Command Line Usage
 
 ```bash
 python manage.py generate_react_types --django_project your_django_project --react_types_folder path/to/output/folder --django_app your_app
