@@ -91,7 +91,7 @@ def generate_react_types(
             fields_code = "\n".join(react_fields)
 
             if not imports_code:
-                type_definition = f"export type {model_name} = {{\n{fields_code}\n}};"
+                type_definition = f"\nexport type {model_name} = {{\n{fields_code}\n}};"
             else:
                 type_definition = (
                     f"{imports_code}\n\n"
