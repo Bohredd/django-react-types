@@ -2,10 +2,9 @@ import os
 import django
 import argparse
 from django.apps import apps
-from django.db import models
 from django_react_types.types import FIELD_TYPE_MAPPING
 from django.core.exceptions import ImproperlyConfigured
-
+from django.db import models
 
 def generate_react_types(
     django_project: str, react_types_folder: str, django_app: str = None
@@ -15,7 +14,7 @@ def generate_react_types(
     settings_module = os.getenv("DJANGO_SETTINGS_MODULE")
     if not settings_module:
         raise ImproperlyConfigured("The Django settings module is not set.")
-
+    
     try:
         __import__(settings_module)
         django.setup()
@@ -34,31 +33,33 @@ def generate_react_types(
     react_types = []
 
     default_apps = [
-        "django.contrib.admin.models.LogEntry",
-        "django.contrib.auth.models.Permission",
-        "django.contrib.auth.models.Group",
-        "django.contrib.auth.models.User",
-        "django.contrib.contenttypes.models.ContentType",
-        "django.contrib.sessions.models.Session",
-        "rest_framework.authtoken.models.Token",
-        "rest_framework.authtoken.models.TokenProxy",
-        "django_celery_beat.models.SolarSchedule",
-        "django_celery_beat.models.IntervalSchedule",
-        "django_celery_beat.models.ClockedSchedule",
-        "django_celery_beat.models.CrontabSchedule",
-        "django_celery_beat.models.PeriodicTasks",
-        "django_celery_beat.models.PeriodicTask",
-        "django_celery_results.models.TaskResult",
-        "django_celery_results.models.ChordCounter",
-        "django_celery_results.models.GroupResult",
+    "admin.LogEntry",
+    "auth.Permission",
+    "auth.Group",
+    "auth.User",
+    "contenttypes.ContentType",
+    "sessions.Session",
+    "authtoken.Token",
+    "authtoken.TokenProxy",
+    "django_celery_beat.SolarSchedule",
+    "django_celery_beat.IntervalSchedule",
+    "django_celery_beat.ClockedSchedule",
+    "django_celery_beat.CrontabSchedule",
+    "django_celery_beat.PeriodicTasks",
+    "django_celery_beat.PeriodicTask",
+    "django_celery_results.TaskResult",
+    "django_celery_results.ChordCounter",
+    "django_celery_results.GroupResult",
     ]
 
     for app in apps_to_search:
         for model in app.get_models():
+
             app_name = model._meta.app_label
             model_name = model.__name__
 
             if f"{app_name}.{model_name}" not in default_apps:
+                model_name = model.__name__
                 fields = model._meta.fields
                 react_fields = []
                 imports = set()
@@ -67,25 +68,21 @@ def generate_react_types(
                     if isinstance(field, models.ForeignKey):
                         related_model_name = field.related_model.__name__
                         react_field_type = related_model_name
-                        imports.add(
-                            f"import {{ {related_model_name} }} from './{related_model_name}';"
-                        )
+                        imports.add(f"import {{ {related_model_name} }} from './{related_model_name}';")
                     elif isinstance(field, models.ManyToManyField):
                         related_model_name = field.related_model.__name__
                         react_field_type = f"{related_model_name}[]"
-                        imports.add(
-                            f"import {{ {related_model_name} }} from './{related_model_name}';"
-                        )
+                        imports.add(f"import {{ {related_model_name} }} from './{related_model_name}';")
                     else:
-                        react_field_type = FIELD_TYPE_MAPPING.get(type(field), "any")
-
+                        react_field_type = FIELD_TYPE_MAPPING.get(
+                            type(field), "any"
+                        )
+                    
                     react_fields.append(f"{field.name}: {react_field_type};")
 
                 react_type = (
                     f"{'\n'.join(imports)}\n\n"
-                    f"export type {app_name}_{model_name} ={{\n"
-                    + "\n".join(react_fields)
-                    + "\n}}"
+                    f"export type {app_name}_{model_name} ={{\n" + "\n".join(react_fields) + "\n}}"
                 )
                 react_types.append(react_type)
 
@@ -93,7 +90,9 @@ def generate_react_types(
         os.makedirs(react_types_folder)
 
     for react_type in react_types:
-        model_name = react_type.split()[2]
+        model_name = react_type.split()[
+            2
+        ]  
         output_file = os.path.join(react_types_folder, f"{model_name}.tsx")
 
         with open(output_file, "w") as f:
