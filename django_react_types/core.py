@@ -69,14 +69,7 @@ def generate_react_types(
             react_fields = []
             imports = set()
 
-            print("Meta fields:", model._meta.fields)
-            print("Meta many_to_many:", model._meta.many_to_many)
-
-            print("Full fields:", fields)
-
-            print("Model:", model_name)
             for field in fields:
-                print("Field:", field)
                 if isinstance(field, models.ForeignKey):
                     related_model_name = field.related_model.__name__
                     react_field_type = related_model_name
@@ -93,6 +86,9 @@ def generate_react_types(
                     react_field_type = FIELD_TYPE_MAPPING.get(type(field), "any")
 
                 react_fields.append(f"{field.name}: {react_field_type};")
+
+            print("Imports for", model_name, imports)
+            print("Fields for", model_name, react_fields)
 
             imports_code = "\n".join(sorted(imports))
             fields_code = "\n".join(react_fields)
